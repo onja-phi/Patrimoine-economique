@@ -1,0 +1,36 @@
+[
+    {
+      "model": "Patrimoine",
+      "data": {
+        "possession": [
+          {
+
+            "libelle": "MacBookPro",
+            "valeurInitiale": 4000000,
+            "dateDebut": "2023-12-25",
+            "dateFin": null,
+            "amortissement": 5
+          },
+          {
+            "libelle": "Alternance",
+            "valeurInitiale": 0,
+            "dateDebut": "2022-12-31",
+            "dateFin": null,
+            "amortissement":10,
+            "valeurConstante": 500000
+          },
+          {
+            "libelle": "Survie",
+            "valeurInitiale": 0,
+            "dateDebut": "2022-12-31",
+            "dateFin": null,
+            "amortissement": null,
+            "valeurConstante": -300000
+          }
+        ]
+      }
+    }
+  ]
+  
+
+ 
