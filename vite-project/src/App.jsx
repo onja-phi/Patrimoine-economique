@@ -34,7 +34,7 @@ function App() {
 
   return (
     <>
-      <h3 class="mt--20">PATRIMOINE ECONOMIQUE</h3>
+      <h3>PATRIMOINE ECONOMIQUE</h3>
       <table className="table table-striped">
         <thead>
           <tr>
