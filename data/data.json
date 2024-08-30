@@ -1,12 +1,22 @@
 [
-  { "model": "Personne", "data": { "nom": "John Doe" } },
+  {
+    "model": "Personne",
+    "data": {
+      "nom": "John Doe"
+    },
+    "libelle": "Laptop2"
+  },
   {
     "model": "Patrimoine",
     "data": {
-      "possesseur": { "nom": "John Doe" },
+      "possesseur": {
+        "nom": "John Doe"
+      },
       "possessions": [
         {
-          "possesseur": { "nom": "John Doe" },
+          "possesseur": {
+            "nom": "John Doe"
+          },
           "libelle": "MacBook Pro",
           "valeur": 4000000,
           "dateDebut": "2023-12-25T00:00:00.000Z",
@@ -14,7 +24,9 @@
           "tauxAmortissement": 5
         },
         {
-          "possesseur": { "nom": "John Doe" },
+          "possesseur": {
+            "nom": "John Doe"
+          },
           "libelle": "Alternance",
           "valeur": 0,
           "dateDebut": "2022-12-31T21:00:00.000Z",
@@ -24,7 +36,9 @@
           "valeurConstante": 500000
         },
         {
-          "possesseur": { "nom": "John Doe" },
+          "possesseur": {
+            "nom": "John Doe"
+          },
           "libelle": "Survie",
           "valeur": 0,
           "dateDebut": "2022-12-31T21:00:00.000Z",
@@ -34,7 +48,9 @@
           "valeurConstante": -300000
         },
         {
-          "possesseur": { "nom": "John Doe" },
+          "possesseur": {
+            "nom": "John Doe"
+          },
           "libelle": "MacBook Pro",
           "valeur": 4000000,
           "dateDebut": "2023-12-25T00:00:00.000Z",
@@ -42,7 +58,9 @@
           "tauxAmortissement": 5
         },
         {
-          "possesseur": { "nom": "John Doe" },
+          "possesseur": {
+            "nom": "John Doe"
+          },
           "libelle": "Alternance",
           "valeur": 0,
           "dateDebut": "2022-12-31T21:00:00.000Z",
@@ -52,7 +70,9 @@
           "valeurConstante": 500000
         },
         {
-          "possesseur": { "nom": "John Doe" },
+          "possesseur": {
+            "nom": "John Doe"
+          },
           "libelle": "Survie",
           "valeur": 0,
           "dateDebut": "2022-12-31T21:00:00.000Z",
@@ -62,6 +82,69 @@
           "valeurConstante": -300000
         }
       ]
-    }
+    },
+    "libelle": "Laptop2"
+  },
+  {
+    "possesseur": {
+      "nom": "Jj"
+    },
+    "libelle": "Laptop2",
+    "valeur": 3000,
+    "dateDebut": "2000-01-01"
+  },
+  {
+    "possesseur": {
+      "nom": "Jj"
+    },
+    "libelle": "blablabla",
+    "valeur": 10000,
+    "dateDebut": "2024-03-10",
+    "dateFin": 20
+  },
+  {
+    "possesseur": {
+      "nom": "Jj"
+    },
+    "libelle": "exemple",
+    "valeur": 10000,
+    "dateDebut": "2000-01-10",
+    "dateFin": 3
+  },
+  {
+    "possesseur": {
+      "nom": "Jj"
+    },
+    "libelle": "Ecolage",
+    "valeur": 240000,
+    "dateDebut": "2023-01-11",
+    "dateFin": 2
+  },
+  {
+    "possesseur": {
+      "nom": "Jj"
+    },
+    "libelle": "Nouveau",
+    "valeur": 12000,
+    "dateDebut": "2010-10-30",
+    "dateFin": 5
+  },
+  {
+    "possesseur": {
+      "nom": "Jj"
+    },
+    "libelle": "exemple2",
+    "valeur": 200,
+    "dateDebut": "2021-01-01",
+    "dateFin": 7
+  },
+  {
+    "possesseur": {
+      "nom": "Jj"
+    },
+    "libelle": "exemple3",
+    "valeur": 10000,
+    "dateDebut": "2024-01-12",
+    "dateFin": 5
   }
 ]

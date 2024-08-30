@@ -3,6 +3,8 @@ import Patrimoine from "./models/Patrimoine.js";
 import Personne from "./models/Personne.js";
 import Flux from "./models/possessions/Flux.js";
 import Possession from "./models/possessions/Possession.js";
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 const john = new Personne("John Doe");
 
 const macBookPro = new Possession(john, "MacBook Pro", 4000000, new Date("2023-12-25"), null, 5);
