@@ -1,67 +1,60 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { Button, Form, Container } from 'react-bootstrap';
+import { useParams, useNavigate } from 'react-router-dom';
 
 function UpdatePossession() {
-  const params = useParams();
-  const [possesion, setPossesion] = useState({});
-  const [loading, setLoading] = useState(true);
+  const { libelle } = useParams();
+  const [possession, setPossession] = useState({ libelle: '' });
+  const navigate = useNavigate(); 
 
   useEffect(() => {
-    const fetchPossession = async () => {
-      try {
-        const response = await fetch('http://localhost:5001/possession/:libelle');
-        const data = await response.json();
-        setPossesion(data);        
-      } catch (error) {
-        console.error('Erreur:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchPossession();
   }, []);
 
-  if (loading) return <div>Loading...</div>;
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+  const fetchPossession = async () => {
     try {
-      const response = await fetch(`/possession/${params.libelle}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ libelle: possesion.libelle, dateFin: possesion.dateFin }),
-      });
-      const updatedPossession = await response.json();
-      console.log('Possession mise à jour:', updatedPossession);
+      const response = await fetch(`http://localhost:5001/possession/${libelle}`);
+      const data = await response.json();
+      setPossession({ libelle: data.libelle });
     } catch (error) {
-      console.error('Erreur:', error);
+      console.error('Erreur lors de la récupération de la possession:', error);
+    }
+  };
+
+  const handleUpdate = async () => {
+    try {
+      const response = await fetch(`http://localhost:5001/possession/${libelle}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ newLibelle: possession.libelle }),
+      });
+      if (response.ok) {
+        navigate('/possession');
+      }
+    } catch (error) {
+      console.error('Erreur lors de la mise à jour de la possession:', error);
     }
   };
 
   return (
-    <div>
-      <h2>Edit Possession</h2>
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="libelle">Libelle:</label>
-        <input
-          type="text"
-          id="libelle"
-          value={possesion.libelle}
-          readOnly
-        />
-        <br />
-        <label htmlFor="dateFin">Date Fin:</label>
-        <input
-          type="date"
-          id="dateFin"
-          value={possesion.dateFin || ''}
-          onChange={(e) => setPossesion(prev => ({...prev, dateFin: e.target.value}))}
-        />
-        <br />
-        <button type="submit">Update</button>
-      </form>
-    </div>
+    <Container>
+      <h3>Mettre à jour le libellé de la possession</h3>
+      <Form>
+        {}
+        <Form.Group controlId="formLibelle">
+          <Form.Label>Libellé</Form.Label>
+          <Form.Control
+            type="text"
+            value={possession.libelle}
+            onChange={(e) => setPossession({ ...possession, libelle: e.target.value })}
+          />
+        </Form.Group>
+        {}
+        <Button variant="primary" onClick={handleUpdate}>Mettre à jour</Button>
+      </Form>
+    </Container>
   );
 }
 

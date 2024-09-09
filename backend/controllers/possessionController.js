@@ -1,68 +1,66 @@
-let possessions = []; 
+import path from 'path';
+import { writeFile } from '../data/index.js';
 
-const getPossessions = (req, res) => {
-  res.status(200).json(possessions);
+const dataPath = path.resolve('../data/data.json');
+
+export const getPossessions = (req, res) => {
+  res.status(200).json(global.possessions);  
 };
 
-//Create new possession
-const createPossession = (req, res) => {
+export const createPossession = async (req, res) => {
   const { libelle, valeur, dateDebut, taux } = req.body;
-  const newPossession = { libelle, valeur, dateDebut, taux, dateFin: null };
-  possessions.push(newPossession);
+  if (!libelle || !valeur || !dateDebut || !taux) {
+    return res.status(400).json({ message: "All fields are required." });
+  }
+
+  const newPossession = { possesseur: { nom: "John Doe" }, libelle, valeur, dateDebut, taux, dateFin: null };
+  global.possessions.push(newPossession);
+
+  await savePossessions();
   res.status(201).json(newPossession);
 };
 
-// Update a possession by libelle
-const updatePossession = (req, res) => {
+export const updatePossession = async (req, res) => {
   const { libelle } = req.params;
-  const { dateFin } = req.body;
-  let possession = possessions.find(p => p.libelle === libelle);
+  const { newLibelle } = req.body;
+
+  let possession = global.possessions.find(p => p.libelle === libelle);
   if (possession) {
-    possession.dateFin = dateFin;
+    possession.libelle = newLibelle || possession.libelle;
+
+    await savePossessions();
     res.status(200).json(possession);
   } else {
     res.status(404).json({ message: "Possession not found" });
   }
 };
 
-// Close a possession by setting its dateFin to the current date
-const closePossession = (req, res) => {
+
+export const closePossession = async (req, res) => {
   const { libelle } = req.params;
-  let possession = possessions.find(p => p.libelle === libelle);
+  let possession = global.possessions.find(p => p.libelle === libelle);
   if (possession) {
     possession.dateFin = new Date().toISOString();
+    await savePossessions();
     res.status(200).json(possession);
   } else {
     res.status(404).json({ message: "Possession not found" });
   }
 };
 
-// Get Valeur Patrimoine for a specific date
-const getValeurPatrimoine = (req, res) => {
+export const getValeurPatrimoine = (req, res) => {
   const { date } = req.params;
   const dateObj = new Date(date);
-  let totalValeur = possessions.reduce((sum, possession) => {
+  let totalValeur = global.possessions.reduce((sum, possession) => {
     return sum + getValeurPossession(possession, dateObj);
   }, 0);
   res.status(200).json({ date, valeur: totalValeur });
 };
 
-// Get Valeur Patrimoine over a range
-const getValeurPatrimoineRange = (req, res) => {
-  const { type, dateDebut, dateFin, jour } = req.body;
-  res.status(200).json({ message: "Valeur Patrimoine Range" });
-};
-
 const getValeurPossession = (possession, date) => {
-  // Logique pour calculer la valeur d'une possession à une date donnée
-  return possession.valeur; // Exemple simplifié
+  return possession.valeur;
 };
 
-module.exports = {
-  getPossessions,
-  createPossession,
-  updatePossession,
-  closePossession,
-  getValeurPatrimoine,
-  getValeurPatrimoineRange,
+const savePossessions = async () => {
+  await writeFile(dataPath, [{ model: "Personne", data: { nom: "John Doe" } }, { model: "Patrimoine", data: { possesseur: { nom: "John Doe" }, possessions: global.possessions } }]);
 };

@@ -1,87 +1,77 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useParams } from 'react-router-dom';
-import Possession from '../../../../models/possessions/Possession';
+import { Button, Table } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 
 function PossessionPage() {
   const [possessions, setPossessions] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const params = useParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchPossessions = async () => {
-      try {
-        const response = await fetch('http://localhost:5001/possession');
-        const data = await response.json();
-        setPossessions(data);
-      } catch (error) {
-        console.error('Erreur:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchPossessions();
   }, []);
 
-
-
-  const handleClose = async () => {
+  const fetchPossessions = async () => {
     try {
-      const response = await fetch(`/possession/${params.libelle}/close`, {
-        method: 'PATCH',
-      });
-      const closedPossession = await response.json();
-      setPossessions(
-        possessions.map(p => p._id === params.libelle ? closedPossession : p)
-      );
+      const response = await fetch('http://localhost:5001/possession');
+      const data = await response.json();
+      setPossessions(data);
     } catch (error) {
-      console.error('Erreur:', error);
+      console.error('Erreur lors de la récupération des possessions:', error);
     }
   };
 
-  if (loading) return <div>Loading...</div>;
+  const closePossession = async (libelle) => {
+    const today = new Date().toISOString().split('T')[0];
+    try {
+      const response = await fetch(`http://localhost:5001/possession/${libelle}/close`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ dateFin: today }),
+      });
+      if (response.ok) {
+        fetchPossessions();
+      }
+    } catch (error) {
+      console.error('Erreur lors de la clôture de la possession:', error);
+    }
+  };
 
   return (
     <div className="container mt-5">
-      <h2 className="mb-3 text-center text-primary">Liste des Possessions</h2>
-      
-      <div className="row">
-        <div className="col-md-12 mx-auto text-center mb-3">
-          <table className="table table-striped table-bordered">
-            <thead>
-              <tr>
-                <th scope="col" className="text-success">Libellé</th>
-                <th scope="col">Valeur</th>
-                <th scope="col">Date Début</th>
-                <th scope="col">Taux</th>
-              </tr>
-            </thead>
-            <tbody>
-              {possessions.map(possession => (
-                <tr key={possession._id}>
-                  <td>{possession.libelle}</td>
-                  <td>{possession.valeur}</td>
-                  <td>{new Date(possession.dateDebut).toLocaleDateString()}</td>
-                  <td>{new Date(possession.dateFin || '0001-01-01').toLocaleDateString()}</td>
-                  <td>{possession.taux}</td>
-                  <td>{(new Possession()).getValeurApresAmortissement(possession.valeur, possession.taux || 0, new Date(possession.dateDebut), new Date())}</td>
-                  <td>
-                    <Link to={`/possession/${possession._id}/edit`} className="btn btn-sm btn-outline-primary me-2">Edit</Link>
-                    <button className="btn btn-sm btn-danger" onClick={() => handleClose(possession._id)}>Close</button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-  
-      <div className="d-flex justify-content-end mb-3">
-        <Link to="/possession/create" className="btn btn-primary me-2">Créer une nouvelle possession</Link>
-      </div>
+      <h3>Liste des Possessions</h3>
+      <Button variant="primary" onClick={() => navigate('/possession/create')}>Créer une nouvelle possession</Button>
+
+      <Table striped bordered hover className="mt-3">
+        <thead>
+          <tr>
+            <th>Libellé</th>
+            <th>Valeur</th>
+            <th>Date Début</th>
+            <th>Date Fin</th>
+            <th>Taux</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {possessions.map((p) => (
+            <tr key={p.libelle}>
+              <td>{p.libelle}</td>
+              <td>{p.valeur}</td>
+              <td>{new Date(p.dateDebut).toLocaleDateString()}</td>
+              <td>{p.dateFin ? new Date(p.dateFin).toLocaleDateString() : 'Non clôturé'}</td>
+              <td>{p.taux}</td>
+              <td>
+                <Button variant="warning" onClick={() => navigate(`/possession/${p.libelle}/update`)}>Éditer</Button>
+                <Button variant="danger" onClick={() => closePossession(p.libelle)}>Clôturer</Button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </Table>
     </div>
   );
-  
 }
 
 export default PossessionPage;
